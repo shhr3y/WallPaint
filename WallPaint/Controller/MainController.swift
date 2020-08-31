@@ -82,6 +82,7 @@ class MainController: UIViewController {
         super.viewDidLoad()
 
         self.image =  #imageLiteral(resourceName: "test7").withRenderingMode(.alwaysOriginal)
+        self.galleryImage =  #imageLiteral(resourceName: "test7").withRenderingMode(.alwaysOriginal)
         configureUI()
         // Do any additional setup after loading the view.
         
@@ -122,11 +123,16 @@ class MainController: UIViewController {
     @objc func handleSelectImage() {
         let alert = UIAlertController(title: "Select Image", message: "Select Source for Image", preferredStyle: .actionSheet)
         
+        alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { (action) in
+            self.imagePicker.sourceType = .camera
+            self.present(self.imagePicker, animated: true, completion: nil)
+        }))
+
         alert.addAction(UIAlertAction(title: "Gallery", style: .default, handler: { (action) in
             self.imagePicker.sourceType = .photoLibrary
             self.present(self.imagePicker, animated: true, completion: nil)
         }))
-        
+                
         alert.addAction(UIAlertAction(title: "Cancel", style: .destructive, handler: nil))
         present(alert, animated: true, completion: nil)
     }
