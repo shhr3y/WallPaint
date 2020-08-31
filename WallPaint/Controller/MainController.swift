@@ -11,11 +11,21 @@ import Photos
 
 class MainController: UIViewController {
     //MARK: - Properties
+    let imagePicker = UIImagePickerController()
+    
     var hueRange: Float = 40
     
     var ciImage: CIImage?
     var defaultHue: Float?
-    let image: UIImage = #imageLiteral(resourceName: "image-1").withRenderingMode(.alwaysOriginal)
+    var image: UIImage? {
+        didSet{
+            guard let image = image else { return }
+            self.displayImage.image = image
+            self.ciImage = CIImage(image: image)
+        }
+    }
+    
+    var galleryImage: UIImage?
     
     lazy var displayImage: UIImageView = {
         let iv = UIImageView()
@@ -71,9 +81,11 @@ class MainController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.ciImage = CIImage(image: displayImage.image!)
+        self.image =  #imageLiteral(resourceName: "test7").withRenderingMode(.alwaysOriginal)
         configureUI()
         // Do any additional setup after loading the view.
+        
+        imagePicker.delegate = self
     }
     
     //MARK: - Selectors
@@ -86,8 +98,7 @@ class MainController: UIViewController {
     }
     
     @objc func handleClearTapped() {
-        displayImage.image = self.image
-        self.ciImage = CIImage(image: displayImage.image!)
+        self.image = galleryImage
     }
     
     @objc func touchedScreen(touch: UITapGestureRecognizer) {
@@ -112,7 +123,8 @@ class MainController: UIViewController {
         let alert = UIAlertController(title: "Select Image", message: "Select Source for Image", preferredStyle: .actionSheet)
         
         alert.addAction(UIAlertAction(title: "Gallery", style: .default, handler: { (action) in
-            
+            self.imagePicker.sourceType = .photoLibrary
+            self.present(self.imagePicker, animated: true, completion: nil)
         }))
         
         alert.addAction(UIAlertAction(title: "Cancel", style: .destructive, handler: nil))
@@ -124,7 +136,6 @@ class MainController: UIViewController {
     //MARK: - Helper Functions
     
     func render() {
-        self.ciImage = CIImage(image: displayImage.image!)
         guard let defaultHue = self.defaultHue else { return }
         
         let centerHueAngle: Float = defaultHue/360.0
@@ -253,5 +264,15 @@ class MainController: UIViewController {
         
         view.addSubview(switchWhite)
         switchWhite.anchor(bottom: slider.topAnchor, right: view.rightAnchor)
+    }
+}
+
+extension MainController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let userPickedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage{
+            self.image = userPickedImage
+            self.galleryImage = userPickedImage
+        }
+        imagePicker.dismiss(animated: true, completion: nil)
     }
 }
