@@ -11,6 +11,7 @@ import Photos
 
 class MainController: UIViewController {
     //MARK: - Properties
+    
     let imagePicker = UIImagePickerController()
     
     var hueRange: Float = 40
