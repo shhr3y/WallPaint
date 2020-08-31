@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import CoreImage
+import Photos
 
 class MainController: UIViewController {
     //MARK: - Properties
@@ -35,6 +35,7 @@ class MainController: UIViewController {
         
         let button = UIButton(type: .system)
         button.setTitle("Select Image", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
         button.addTarget(self, action: #selector(handleSelectImage), for: .touchUpInside)
         
         container.addSubview(button)
@@ -104,10 +105,19 @@ class MainController: UIViewController {
         
         self.defaultHue = hsv.h * 360
         
-        print("DEBUG:- HUE: \(defaultHue) for COLOR: \(red*255) \(green*255) \(blue*255)")
+        print("DEBUG:- HUE: \(hsv.h) for COLOR: \(red*255) \(green*255) \(blue*255)")
     }
     
-    @
+    @objc func handleSelectImage() {
+        let alert = UIAlertController(title: "Select Image", message: "Select Source for Image", preferredStyle: .actionSheet)
+        
+        alert.addAction(UIAlertAction(title: "Gallery", style: .default, handler: { (action) in
+            
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .destructive, handler: nil))
+        present(alert, animated: true, completion: nil)
+    }
     
     
     
@@ -227,8 +237,12 @@ class MainController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Run", style: .plain, target: self, action: #selector(handleRunTapped))
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Clear", style: .plain, target: self, action: #selector(handleClearTapped))
         
+        view.addSubview(selectImageContainer)
+        selectImageContainer.anchor(left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingBottom: 40)
+        selectImageContainer.setDimensions(height: 50, width: view.frame.width)
+        
         view.addSubview(slider)
-        slider.anchor(left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingLeft: 10, paddingBottom: 40, paddingRight: 10)
+        slider.anchor(left: view.leftAnchor, bottom: selectImageContainer.topAnchor, right: view.rightAnchor, paddingLeft: 10, paddingBottom: 20, paddingRight: 10)
         
         view.addSubview(hueLabel)
         hueLabel.anchor(left: view.leftAnchor, bottom: slider.topAnchor)
