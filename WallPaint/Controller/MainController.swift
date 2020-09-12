@@ -31,7 +31,7 @@ class MainController: UIViewController {
     lazy var displayImage: UIImageView = {
         let iv = UIImageView()
         iv.image = self.image
-//        iv.contentMode = .scaleAspectFit
+        iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
         
         iv.isUserInteractionEnabled = true
@@ -104,7 +104,7 @@ class MainController: UIViewController {
     }
     
     @objc func touchedScreen(touch: UITapGestureRecognizer) {
-        let touchPoint = touch.location(in: self.view)
+        let touchPoint = touch.location(in: self.displayImage)
         let frame = displayImage.frame.size
         guard let rgbColour = displayImage.image?.getPixelColors2(atLocation: touchPoint, withFrameSize: frame) else { return }
         
