@@ -22,6 +22,7 @@ class MainController: UIViewController {
         didSet{
             guard let image = image else { return }
             self.displayImage.image = image
+            self.displayImage.contentMode = .scaleToFill
             self.ciImage = CIImage(image: image)
         }
     }
@@ -31,7 +32,7 @@ class MainController: UIViewController {
     lazy var displayImage: UIImageView = {
         let iv = UIImageView()
         iv.image = self.image
-        iv.contentMode = .scaleAspectFill
+        iv.contentMode = .scaleToFill
         iv.clipsToBounds = true
         
         iv.isUserInteractionEnabled = true
@@ -85,7 +86,6 @@ class MainController: UIViewController {
         self.image =  #imageLiteral(resourceName: "test7").withRenderingMode(.alwaysOriginal)
         self.galleryImage =  #imageLiteral(resourceName: "test7").withRenderingMode(.alwaysOriginal)
         configureUI()
-        // Do any additional setup after loading the view.
         
         imagePicker.delegate = self
     }
@@ -104,7 +104,7 @@ class MainController: UIViewController {
     }
     
     @objc func touchedScreen(touch: UITapGestureRecognizer) {
-        let touchPoint = touch.location(in: self.displayImage)
+        let touchPoint = touch.location(ofTouch: 0, in: self.displayImage)
         let frame = displayImage.frame.size
         guard let rgbColour = displayImage.image?.getPixelColors2(atLocation: touchPoint, withFrameSize: frame) else { return }
         
